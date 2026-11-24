@@ -97,7 +97,7 @@ function main () {
     // Initialize the GL context
     const gl = canvas.getContext( 'webgl', {
         'alpha': false
-    } ); // use "experimental-webgl" for Edge browser
+    } )!; // use "experimental-webgl" for Edge browser
 
     // Only continue if WebGL is available and working
     if ( gl === null ) {
@@ -115,7 +115,7 @@ function main () {
     // gl.getExtension('OES_element_index_uint');
 
     // load in the mesh (this reads all vertex and face information from the .obj file)
-    const objStr = document.getElementById( 'decorations.obj' ).innerHTML;
+    const objStr = document.getElementById( 'decorations.obj' )!.innerHTML;
     const mesh = new OBJ.Mesh( objStr );
 
     OBJ.initMeshBuffers( gl, mesh );
@@ -138,7 +138,7 @@ function main () {
 
     // helper function to extract vertex position from array of vertices
     function vec3FromArray ( vertices: number[], index: number ) {
-        return vec3.fromValues( vertices[3 * index + 0], vertices[3 * index + 1], vertices[3 * index + 2] );
+        return vec3.fromValues( vertices[( 3 * index ) + 0], vertices[( 3 * index ) + 1], vertices[( 3 * index ) + 2] );
     }
 
     // go through all triangles
@@ -361,7 +361,7 @@ function initShaderProgram ( gl: WebGLRenderingContext, vsSource: string, fsSour
             ) }`
         );
 
-        return null;
+        throw new Error( `Shaderprogram compile failed: ${ gl.getShaderInfoLog( shaderProgram ) }` );
     }
 
     return shaderProgram;
@@ -372,7 +372,7 @@ function initShaderProgram ( gl: WebGLRenderingContext, vsSource: string, fsSour
 // compiles it.
 //
 function loadShader ( gl: WebGLRenderingContext, type: number, source: string ) {
-    const shader = gl.createShader( type );
+    const shader = gl.createShader( type )!;
 
     // Send the source to the shader object
     gl.shaderSource( shader, source );
@@ -387,7 +387,7 @@ function loadShader ( gl: WebGLRenderingContext, type: number, source: string ) 
         );
         gl.deleteShader( shader );
 
-        return null;
+        throw new Error( `Shader compile failed: ${ gl.getShaderInfoLog( shader ) }` );
     }
 
     return shader;
